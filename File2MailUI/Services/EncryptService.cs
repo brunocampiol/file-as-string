@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace File2MailUI.Services
+namespace FileAsStringUI.Services
 {
     public static class EncryptService
     {

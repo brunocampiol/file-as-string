@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace File2MailUI.Properties
+namespace FileAsStringUI.Properties
 {
 
 

@@ -1,4 +1,4 @@
-﻿namespace File2MailUI
+﻿namespace FileAsStringUI
 {
     partial class MainForm
     {
