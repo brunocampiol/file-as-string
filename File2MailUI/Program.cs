@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace File2MailUI
+namespace FileAsStringUI
 {
     internal static class Program
     {

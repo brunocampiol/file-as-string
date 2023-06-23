@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("File2MailUI")]
+[assembly: AssemblyTitle("FileAsStringUI")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ADP")]
-[assembly: AssemblyProduct("File2MailUI")]
+[assembly: AssemblyProduct("FileAsStringUI")]
 [assembly: AssemblyCopyright("Copyright © ADP 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -1,9 +1,9 @@
-﻿using File2MailUI.Services;
+﻿using FileAsStringUI.Services;
 using System;
 using System.IO;
 using System.Windows.Forms;
 
-namespace File2MailUI
+namespace FileAsStringUI
 {
     public partial class MainForm : Form
     {
