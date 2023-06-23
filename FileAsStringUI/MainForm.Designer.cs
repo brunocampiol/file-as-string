@@ -39,6 +39,7 @@
             this.buttonDeserialize = new System.Windows.Forms.Button();
             this.labelDestinationFile = new System.Windows.Forms.Label();
             this.textBoxDestinationFileName = new System.Windows.Forms.TextBox();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.tabControl.SuspendLayout();
             this.tabSerialize.SuspendLayout();
             this.tabDeserialize.SuspendLayout();
@@ -145,11 +146,19 @@
             this.textBoxDestinationFileName.Size = new System.Drawing.Size(333, 20);
             this.textBoxDestinationFileName.TabIndex = 0;
             // 
+            // progressBar
+            // 
+            this.progressBar.Location = new System.Drawing.Point(12, 444);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(772, 23);
+            this.progressBar.TabIndex = 1;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 475);
+            this.Controls.Add(this.progressBar);
             this.Controls.Add(this.tabControl);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -177,6 +186,7 @@
         private System.Windows.Forms.TextBox textBoxDestinationFileName;
         private System.Windows.Forms.Button buttonDeserialize;
         private System.Windows.Forms.TextBox textBoxDeserialize;
+        private System.Windows.Forms.ProgressBar progressBar;
     }
 }
 
