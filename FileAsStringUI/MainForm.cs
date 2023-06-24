@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace FileAsStringUI
@@ -10,7 +11,9 @@ namespace FileAsStringUI
     {
         private string _originalFilePath = string.Empty;
         private BackgroundWorker _backgroundWorker = new BackgroundWorker();
+        private const string _fileSuffix = "restored-";
         private const string _password = "1234";
+        private const int _maxFileSizeMb = 30;
 
         public MainForm()
         {
@@ -22,10 +25,10 @@ namespace FileAsStringUI
         // attaching event handlers.
         private void InitializeBackgroundWorker()
         {
-            _backgroundWorker.WorkerReportsProgress = true;
-            _backgroundWorker.DoWork += new DoWorkEventHandler(backgroundWorker_DoWork);
-            _backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker_RunWorkerCompleted);
-            _backgroundWorker.ProgressChanged += new ProgressChangedEventHandler(backgroundWorker_ProgressChanged);
+            //_backgroundWorker.WorkerReportsProgress = true;
+            //_backgroundWorker.DoWork += new DoWorkEventHandler(backgroundWorker_DoWork);
+            //_backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker_RunWorkerCompleted);
+            //_backgroundWorker.ProgressChanged += new ProgressChangedEventHandler(backgroundWorker_ProgressChanged);
         }
 
         private void buttonSelectFile_Click(object sender, EventArgs e)
@@ -34,42 +37,56 @@ namespace FileAsStringUI
             {
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    var megabytesSize = new FileInfo(openFileDialog.FileName).Length / 1000000;
-                    if (megabytesSize > 30)
+                    var fullFileName = openFileDialog.FileName;
+                    var fileName = openFileDialog.SafeFileName;
+
+                    var megabytesSize = new FileInfo(fullFileName).Length / 1000000;
+                    if (megabytesSize > _maxFileSizeMb)
                     {
-                        MessageBox.Show("File should be less then 10MB");
+                        MessageBox.Show($"File should be less then {_maxFileSizeMb}MB");
                         return;
                     }
 
-                    _originalFilePath = openFileDialog.FileName.Replace(openFileDialog.SafeFileName, "");
-                    labelSelectedFile.Text = openFileDialog.FileName;
-                    _backgroundWorker.RunWorkerAsync(openFileDialog.FileName);
+                    _originalFilePath = fullFileName.Replace(fileName, "");
 
-                    //var fileBytes = File.ReadAllBytes(openFileDialog.FileName);
-                    //var base64String = Convert.ToBase64String(fileBytes);
-                    //var encryptedText = EncryptService.EncryptStringAES(base64String, _password);
-                    //textBoxSerialize.Text = encryptedText;
-                    //Clipboard.SetText(encryptedText);
+                    //labelSelectedFile.Text = openFileDialog.FileName;
+                    //_backgroundWorker.RunWorkerAsync(openFileDialog.FileName);
+
+                    labelSelectedFile.Text = fullFileName;
+                    var encryptedFileName = EncryptService.EncryptStringAES(fileName, _password);
+                    var fileBytes = File.ReadAllBytes(fullFileName);
+                    var base64FileBytes = Convert.ToBase64String(fileBytes);
+
+                    var outputString = $"{encryptedFileName}:{base64FileBytes}";
+
+                    textBoxSerialize.Text = outputString;
+                    Clipboard.SetText(outputString);
                 }
             }
         }
 
         private void buttonDeserialize_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(textBoxDestinationFileName.Text))
-            {
-                MessageBox.Show("Cannot deserialize to empty destination file name");
-                return;
-            }
             if (string.IsNullOrWhiteSpace(textBoxDeserialize.Text))
             {
                 MessageBox.Show("Cannot deserialize from empty data");
                 return;
             }
+            if (!textBoxDeserialize.Text.Contains(":"))
+            {
+                MessageBox.Show("Invalid data format");
+                return;
+            }
 
-            var base64String = EncryptService.DecryptStringAES(textBoxDeserialize.Text, _password);
-            var fileBytes = Convert.FromBase64String(base64String);
+            var inputData = textBoxDeserialize.Text.Split(':');
+            if (inputData.Count() != 2)
+            {
+                MessageBox.Show("Invalid data format");
+                return;
+            }
 
+            var fileName = _fileSuffix + EncryptService.DecryptStringAES(inputData[0], _password);
+            var fileBytes = Convert.FromBase64String(inputData[1]);
             string currentPath;
             if (string.IsNullOrEmpty(_originalFilePath))
             {
@@ -80,8 +97,9 @@ namespace FileAsStringUI
                 currentPath = _originalFilePath;
             }
             
-            var filePath = currentPath + textBoxDestinationFileName.Text;
-            File.WriteAllBytes(filePath, fileBytes);
+            var fullFileName = currentPath + fileName;
+            labelOutputFile.Text = fullFileName;
+            File.WriteAllBytes(fullFileName, fileBytes);
         }
 
         // This event handler is where the actual,
@@ -125,7 +143,6 @@ namespace FileAsStringUI
             {
                 // Finally, handle the case where the operation
                 // succeeded.
-                //resultLabel.Text = e.Result.ToString();
                 var result = e.Result.ToString();
                 textBoxSerialize.Text = result;
                 Clipboard.SetText(result);
@@ -135,7 +152,6 @@ namespace FileAsStringUI
             //startAsyncButton.Enabled = true;
         }
 
-        // This event handler updates the progress bar.
         private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             this.progressBar.Value = e.ProgressPercentage;
