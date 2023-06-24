@@ -27,9 +27,12 @@ namespace FileAsStringUI
         {
             _backgroundWorker = new BackgroundWorker();
             _backgroundWorker.WorkerReportsProgress = true;
-            _backgroundWorker.DoWork += new DoWorkEventHandler(backgroundWorker_DoWork);
-            _backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker_RunWorkerCompleted);
-            _backgroundWorker.ProgressChanged += new ProgressChangedEventHandler(backgroundWorker_ProgressChanged);
+            _backgroundWorker.DoWork += 
+                new DoWorkEventHandler(backgroundWorker_DoWork);
+            _backgroundWorker.RunWorkerCompleted += 
+                new RunWorkerCompletedEventHandler(backgroundWorker_RunWorkerCompleted);
+            _backgroundWorker.ProgressChanged += 
+                new ProgressChangedEventHandler(backgroundWorker_ProgressChanged);
         }
 
         private void buttonSelectFile_Click(object sender, EventArgs e)
@@ -74,10 +77,10 @@ namespace FileAsStringUI
                 MessageBox.Show("Invalid data format");
                 return;
             }
-
+            
             var fileName = _fileSuffix + EncryptService.DecryptStringAES(inputData[0], _password);
             var fileBytes = Convert.FromBase64String(inputData[1]);
-            var absoluteFilePath = Directory.GetCurrentDirectory() + @"\" + fileName;
+            var absoluteFilePath = Directory.GetCurrentDirectory() + Path.PathSeparator + fileName;
 
             labelOutputFile.Text = absoluteFilePath;
             File.WriteAllBytes(absoluteFilePath, fileBytes);

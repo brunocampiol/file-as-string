@@ -8,10 +8,11 @@ namespace FileAsStringUI.Models
         public string FileName { get; set; }
         public string AbsoluteFileName { get { return FilePath + FileName; } }
 
-        public FileInformation(string filePath, string fileName) 
+        public FileInformation(string filePath, string fileName)
         {
-            if (string.IsNullOrWhiteSpace(filePath)) throw new ArgumentNullException(nameof(filePath));
-            if (string.IsNullOrWhiteSpace(fileName)) throw new ArgumentNullException(nameof(fileName));
+            const string _argumentErrorMessage = "Cannot be null, empty or consists only of white-space characters";
+            if (string.IsNullOrWhiteSpace(filePath)) throw new ArgumentException(_argumentErrorMessage, nameof(filePath));
+            if (string.IsNullOrWhiteSpace(fileName)) throw new ArgumentException(_argumentErrorMessage, nameof(fileName));
 
             FilePath = filePath;
             FileName = fileName;
