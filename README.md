@@ -7,6 +7,10 @@ This is a .NET Framework Windows Forms repository to help create plain text from
 
 Any kind of help is welcome.
 
+<div align="center">
+    <img width="562px" height="355px" src="https://raw.githubusercontent.com/brunocampiol/file-as-string/main/Resources/app.png" >
+</div>
+
 ## Requirements
 
 * .NET Framework 4.8
