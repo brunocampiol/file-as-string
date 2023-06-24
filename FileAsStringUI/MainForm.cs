@@ -1,4 +1,5 @@
-﻿using FileAsStringUI.Services;
+﻿using FileAsStringUI.Models;
+using FileAsStringUI.Services;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -9,8 +10,8 @@ namespace FileAsStringUI
 {
     public partial class MainForm : Form
     {
-        private string _originalFilePath = string.Empty;
-        private BackgroundWorker _backgroundWorker = new BackgroundWorker();
+        private BackgroundWorker _backgroundWorker;
+
         private const string _fileSuffix = "restored-";
         private const string _password = "1234";
         private const int _maxFileSizeMb = 30;
@@ -25,10 +26,11 @@ namespace FileAsStringUI
         // attaching event handlers.
         private void InitializeBackgroundWorker()
         {
-            //_backgroundWorker.WorkerReportsProgress = true;
-            //_backgroundWorker.DoWork += new DoWorkEventHandler(backgroundWorker_DoWork);
-            //_backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker_RunWorkerCompleted);
-            //_backgroundWorker.ProgressChanged += new ProgressChangedEventHandler(backgroundWorker_ProgressChanged);
+            _backgroundWorker = new BackgroundWorker();
+            _backgroundWorker.WorkerReportsProgress = true;
+            _backgroundWorker.DoWork += new DoWorkEventHandler(backgroundWorker_DoWork);
+            _backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker_RunWorkerCompleted);
+            _backgroundWorker.ProgressChanged += new ProgressChangedEventHandler(backgroundWorker_ProgressChanged);
         }
 
         private void buttonSelectFile_Click(object sender, EventArgs e)
@@ -37,30 +39,19 @@ namespace FileAsStringUI
             {
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    var fullFileName = openFileDialog.FileName;
                     var fileName = openFileDialog.SafeFileName;
+                    var filePath = openFileDialog.FileName.Replace(fileName, "");
+                    var fileInformation = new FileInformation(filePath, fileName);
 
-                    var megabytesSize = new FileInfo(fullFileName).Length / 1000000;
+                    var megabytesSize = new FileInfo(fileInformation.AbsoluteFileName).Length / 1000000;
                     if (megabytesSize > _maxFileSizeMb)
                     {
                         MessageBox.Show($"File should be less then {_maxFileSizeMb}MB");
                         return;
                     }
 
-                    _originalFilePath = fullFileName.Replace(fileName, "");
-
-                    //labelSelectedFile.Text = openFileDialog.FileName;
-                    //_backgroundWorker.RunWorkerAsync(openFileDialog.FileName);
-
-                    labelSelectedFile.Text = fullFileName;
-                    var encryptedFileName = EncryptService.EncryptStringAES(fileName, _password);
-                    var fileBytes = File.ReadAllBytes(fullFileName);
-                    var base64FileBytes = Convert.ToBase64String(fileBytes);
-
-                    var outputString = $"{encryptedFileName}:{base64FileBytes}";
-
-                    textBoxSerialize.Text = outputString;
-                    Clipboard.SetText(outputString);
+                    labelSelectedFile.Text = fileInformation.AbsoluteFileName;
+                    _backgroundWorker.RunWorkerAsync(fileInformation);
                 }
             }
         }
@@ -87,19 +78,10 @@ namespace FileAsStringUI
 
             var fileName = _fileSuffix + EncryptService.DecryptStringAES(inputData[0], _password);
             var fileBytes = Convert.FromBase64String(inputData[1]);
-            string currentPath;
-            if (string.IsNullOrEmpty(_originalFilePath))
-            {
-                currentPath = Directory.GetCurrentDirectory() + @"\";
-            }
-            else
-            {
-                currentPath = _originalFilePath;
-            }
-            
-            var fullFileName = currentPath + fileName;
-            labelOutputFile.Text = fullFileName;
-            File.WriteAllBytes(fullFileName, fileBytes);
+            var absoluteFilePath = Directory.GetCurrentDirectory() + @"\" + fileName;
+
+            labelOutputFile.Text = absoluteFilePath;
+            File.WriteAllBytes(absoluteFilePath, fileBytes);
         }
 
         // This event handler is where the actual,
@@ -108,16 +90,17 @@ namespace FileAsStringUI
         {
             // Get the BackgroundWorker that raised this event.
             var worker = sender as BackgroundWorker;
-            var filePath = (string)e.Argument;
+            var fileInformation = (FileInformation)e.Argument;
 
             // Assign the result of the computation
             // to the Result property of the DoWorkEventArgs
             // object. This is will be available to the
             // RunWorkerCompleted eventhandler.
-            var fileBytes = ReadAllBytesWithProgress(worker, filePath);
-            var base64String = Convert.ToBase64String(fileBytes);
-            var encryptedText = EncryptService.EncryptStringAES(base64String, _password);
-            e.Result = encryptedText;
+            var encryptedFileName = EncryptService.EncryptStringAES(fileInformation.FileName, _password);
+            var fileBytes = ReadAllBytesWithProgress(worker, fileInformation.AbsoluteFileName);
+            var base64FileBytes = Convert.ToBase64String(fileBytes);
+            var resultString = $"{encryptedFileName}:{base64FileBytes}";
+            e.Result = resultString;
         }
 
         // This event handler deals with the results of the
@@ -154,7 +137,7 @@ namespace FileAsStringUI
 
         private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            this.progressBar.Value = e.ProgressPercentage;
+            progressBar.Value = e.ProgressPercentage;
         }
 
         private static byte[] ReadAllBytesWithProgress(BackgroundWorker worker, string filePath)
