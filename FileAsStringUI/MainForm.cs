@@ -14,7 +14,8 @@ namespace FileAsStringUI
 
         private const string _fileSuffix = "restored-";
         private const string _password = "1234";
-        private const int _maxFileSizeMb = 30;
+        private const int _maxFileSizeMb = 26;
+        private const int _bufferSize = 4096;
 
         public MainForm()
         {
@@ -22,8 +23,6 @@ namespace FileAsStringUI
             InitializeBackgroundWorker();
         }
 
-        // Set up the BackgroundWorker object by
-        // attaching event handlers.
         private void InitializeBackgroundWorker()
         {
             _backgroundWorker = new BackgroundWorker();
@@ -84,8 +83,6 @@ namespace FileAsStringUI
             File.WriteAllBytes(absoluteFilePath, fileBytes);
         }
 
-        // This event handler is where the actual,
-        // potentially time-consuming work is done.
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             // Get the BackgroundWorker that raised this event.
@@ -103,8 +100,6 @@ namespace FileAsStringUI
             e.Result = resultString;
         }
 
-        // This event handler deals with the results of the
-        // background operation.
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             // First, handle the case where an exception was thrown.
@@ -142,8 +137,7 @@ namespace FileAsStringUI
 
         private static byte[] ReadAllBytesWithProgress(BackgroundWorker worker, string filePath)
         {
-            const int bufferSize = 4096;
-            byte[] buffer = new byte[bufferSize];
+            byte[] buffer = new byte[_bufferSize];
             int bytesRead;
             long totalBytesRead = 0;
 
@@ -152,7 +146,7 @@ namespace FileAsStringUI
                 long fileSize = fileStream.Length;
                 using (MemoryStream memoryStream = new MemoryStream())
                 {
-                    while ((bytesRead = fileStream.Read(buffer, 0, bufferSize)) > 0)
+                    while ((bytesRead = fileStream.Read(buffer, 0, _bufferSize)) > 0)
                     {
                         memoryStream.Write(buffer, 0, bytesRead);
                         totalBytesRead += bytesRead;

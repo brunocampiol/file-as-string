@@ -35,10 +35,10 @@
             this.labelSelectedFile = new System.Windows.Forms.Label();
             this.buttonSelectFile = new System.Windows.Forms.Button();
             this.tabDeserialize = new System.Windows.Forms.TabPage();
+            this.labelOutputFile = new System.Windows.Forms.Label();
             this.textBoxDeserialize = new System.Windows.Forms.TextBox();
             this.buttonDeserialize = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.labelOutputFile = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabSerialize.SuspendLayout();
             this.tabDeserialize.SuspendLayout();
@@ -70,7 +70,7 @@
             // textBoxSerialize
             // 
             this.textBoxSerialize.Location = new System.Drawing.Point(9, 35);
-            this.textBoxSerialize.MaxLength = 9999999;
+            this.textBoxSerialize.MaxLength = 999999999;
             this.textBoxSerialize.Multiline = true;
             this.textBoxSerialize.Name = "textBoxSerialize";
             this.textBoxSerialize.ReadOnly = true;
@@ -110,10 +110,19 @@
             this.tabDeserialize.Text = "Deserialize";
             this.tabDeserialize.UseVisualStyleBackColor = true;
             // 
+            // labelOutputFile
+            // 
+            this.labelOutputFile.AutoSize = true;
+            this.labelOutputFile.Location = new System.Drawing.Point(87, 11);
+            this.labelOutputFile.Name = "labelOutputFile";
+            this.labelOutputFile.Size = new System.Drawing.Size(70, 13);
+            this.labelOutputFile.TabIndex = 4;
+            this.labelOutputFile.Text = "No output file";
+            // 
             // textBoxDeserialize
             // 
             this.textBoxDeserialize.Location = new System.Drawing.Point(9, 36);
-            this.textBoxDeserialize.MaxLength = 9999999;
+            this.textBoxDeserialize.MaxLength = 999999999;
             this.textBoxDeserialize.Multiline = true;
             this.textBoxDeserialize.Name = "textBoxDeserialize";
             this.textBoxDeserialize.Size = new System.Drawing.Size(756, 358);
@@ -136,15 +145,6 @@
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(772, 23);
             this.progressBar.TabIndex = 1;
-            // 
-            // labelOutputFile
-            // 
-            this.labelOutputFile.AutoSize = true;
-            this.labelOutputFile.Location = new System.Drawing.Point(87, 11);
-            this.labelOutputFile.Name = "labelOutputFile";
-            this.labelOutputFile.Size = new System.Drawing.Size(70, 13);
-            this.labelOutputFile.TabIndex = 4;
-            this.labelOutputFile.Text = "No output file";
             // 
             // MainForm
             // 
