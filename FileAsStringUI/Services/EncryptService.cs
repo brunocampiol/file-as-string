@@ -10,7 +10,7 @@ namespace FileAsStringUI.Services
         //While an app specific salt is not the best practice for
         //password based encryption, it's probably safe enough as long as
         //it is truly uncommon. Also too much work to alter this answer otherwise.
-        private static readonly byte[] _salt = Encoding.UTF8.GetBytes("123456789");
+        private static readonly byte[] _salt = Encoding.UTF8.GetBytes("4FFF7CF1-2CD1-4C4E-8229-E49BB42C6589");
 
         /// <summary>
         /// Encrypt the given string using AES.  The string can be decrypted using 

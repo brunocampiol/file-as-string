@@ -2,13 +2,15 @@
 
 namespace FileAsStringUI.Models
 {
-    public class FileInformation
+    public class FileInfoDto
     {
         public string FilePath { get; set; }
         public string FileName { get; set; }
         public string AbsoluteFileName { get { return FilePath + FileName; } }
-
-        public FileInformation(string filePath, string fileName)
+        public string SerializationResult { get; set; }
+        public byte[] FileBytes { get; set; }
+        
+        public FileInfoDto(string filePath, string fileName)
         {
             const string _argumentErrorMessage = "Cannot be null, empty or consists only of white-space characters";
             if (string.IsNullOrWhiteSpace(filePath)) throw new ArgumentException(_argumentErrorMessage, nameof(filePath));
