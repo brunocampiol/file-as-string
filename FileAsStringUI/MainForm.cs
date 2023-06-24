@@ -8,7 +8,6 @@ namespace FileAsStringUI
 {
     public partial class MainForm : Form
     {
-        private int _highestPercentageReached = 0;
         private string _originalFilePath = string.Empty;
         private BackgroundWorker _backgroundWorker = new BackgroundWorker();
         private const string _password = "1234";
@@ -36,23 +35,21 @@ namespace FileAsStringUI
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     var megabytesSize = new FileInfo(openFileDialog.FileName).Length / 1000000;
-                    if (megabytesSize > 10)
+                    if (megabytesSize > 30)
                     {
                         MessageBox.Show("File should be less then 10MB");
                         return;
                     }
 
-                    //_originalFilePath = openFileDialog.FileName.Replace(openFileDialog.SafeFileName, "");
-                    //labelSelectedFile.Text = openFileDialog.FileName;
+                    _originalFilePath = openFileDialog.FileName.Replace(openFileDialog.SafeFileName, "");
+                    labelSelectedFile.Text = openFileDialog.FileName;
+                    _backgroundWorker.RunWorkerAsync(openFileDialog.FileName);
 
                     //var fileBytes = File.ReadAllBytes(openFileDialog.FileName);
                     //var base64String = Convert.ToBase64String(fileBytes);
                     //var encryptedText = EncryptService.EncryptStringAES(base64String, _password);
                     //textBoxSerialize.Text = encryptedText;
                     //Clipboard.SetText(encryptedText);
-
-                    _highestPercentageReached = 0;
-                    _backgroundWorker.RunWorkerAsync();
                 }
             }
         }
@@ -92,14 +89,17 @@ namespace FileAsStringUI
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             // Get the BackgroundWorker that raised this event.
-            BackgroundWorker worker = sender as BackgroundWorker;
+            var worker = sender as BackgroundWorker;
+            var filePath = (string)e.Argument;
 
             // Assign the result of the computation
             // to the Result property of the DoWorkEventArgs
             // object. This is will be available to the
             // RunWorkerCompleted eventhandler.
-            //e.Result = ComputeFibonacci((int)e.Argument, worker, e);
-            e.Result = ForIteration(worker, e);
+            var fileBytes = ReadAllBytesWithProgress(worker, filePath);
+            var base64String = Convert.ToBase64String(fileBytes);
+            var encryptedText = EncryptService.EncryptStringAES(base64String, _password);
+            e.Result = encryptedText;
         }
 
         // This event handler deals with the results of the
@@ -126,6 +126,9 @@ namespace FileAsStringUI
                 // Finally, handle the case where the operation
                 // succeeded.
                 //resultLabel.Text = e.Result.ToString();
+                var result = e.Result.ToString();
+                textBoxSerialize.Text = result;
+                Clipboard.SetText(result);
             }
 
             // Enable the Start button.
@@ -138,28 +141,30 @@ namespace FileAsStringUI
             this.progressBar.Value = e.ProgressPercentage;
         }
 
-        private int ForIteration(BackgroundWorker worker, DoWorkEventArgs e)
+        private static byte[] ReadAllBytesWithProgress(BackgroundWorker worker, string filePath)
         {
-            var cursor = 0;
-            const int maxSize = 99999999;
-            for (int i = 0; i < maxSize; i++)
+            const int bufferSize = 4096;
+            byte[] buffer = new byte[bufferSize];
+            int bytesRead;
+            long totalBytesRead = 0;
+
+            using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
-                if (worker.CancellationPending)
+                long fileSize = fileStream.Length;
+                using (MemoryStream memoryStream = new MemoryStream())
                 {
-                    e.Cancel = true;
-                    return -1;
-                }
+                    while ((bytesRead = fileStream.Read(buffer, 0, bufferSize)) > 0)
+                    {
+                        memoryStream.Write(buffer, 0, bytesRead);
+                        totalBytesRead += bytesRead;
+                        var progressPercentage = totalBytesRead / fileSize * 100;
+                        // Call the progress callback with the current progress
+                        worker.ReportProgress(Convert.ToInt32(progressPercentage));
+                    }
 
-                int percentComplete = (int)((float)i / (float)maxSize * 100);
-                if (percentComplete > _highestPercentageReached)
-                {
-                    _highestPercentageReached = percentComplete;
-                    worker.ReportProgress(percentComplete);
+                    return memoryStream.ToArray();
                 }
-                cursor = i;
             }
-
-            return cursor;
         }
     }
 }

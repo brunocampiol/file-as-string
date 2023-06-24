@@ -74,8 +74,10 @@
             this.textBoxSerialize.MaxLength = 9999999;
             this.textBoxSerialize.Multiline = true;
             this.textBoxSerialize.Name = "textBoxSerialize";
+            this.textBoxSerialize.ReadOnly = true;
             this.textBoxSerialize.Size = new System.Drawing.Size(753, 335);
             this.textBoxSerialize.TabIndex = 2;
+            this.textBoxSerialize.WordWrap = false;
             // 
             // labelSelectedFile
             // 
@@ -118,6 +120,7 @@
             this.textBoxDeserialize.Name = "textBoxDeserialize";
             this.textBoxDeserialize.Size = new System.Drawing.Size(756, 358);
             this.textBoxDeserialize.TabIndex = 3;
+            this.textBoxDeserialize.WordWrap = false;
             // 
             // buttonDeserialize
             // 
