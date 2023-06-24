@@ -10,7 +10,7 @@ namespace FileAsStringUI.Services
         //While an app specific salt is not the best practice for
         //password based encryption, it's probably safe enough as long as
         //it is truly uncommon. Also too much work to alter this answer otherwise.
-        private static byte[] _salt = Encoding.UTF8.GetBytes("123456789");
+        private static readonly byte[] _salt = Encoding.UTF8.GetBytes("4FFF7CF1-2CD1-4C4E-8229-E49BB42C6589");
 
         /// <summary>
         /// Encrypt the given string using AES.  The string can be decrypted using 
@@ -129,13 +129,13 @@ namespace FileAsStringUI.Services
             byte[] rawLength = new byte[sizeof(int)];
             if (s.Read(rawLength, 0, rawLength.Length) != rawLength.Length)
             {
-                throw new SystemException("Stream did not contain properly formatted byte array");
+                throw new InvalidOperationException("Stream did not contain properly formatted byte array");
             }
 
             byte[] buffer = new byte[BitConverter.ToInt32(rawLength, 0)];
             if (s.Read(buffer, 0, buffer.Length) != buffer.Length)
             {
-                throw new SystemException("Did not read byte array properly");
+                throw new InvalidOperationException("Did not read byte array properly");
             }
 
             return buffer;
