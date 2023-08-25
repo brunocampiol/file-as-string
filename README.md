@@ -2,10 +2,16 @@
 📄<br>File As String UI
 </h1>
 
-## About
-This is a .NET Framework Windows Forms repository to help create plain text from a specific file and vice versa.
+## Table of Contents
+- [About](#about)
+- [Requirements](#requirements)
+- [Usage](#usage)
+- [Contributing](#contributing)
 
-Any kind of help is welcome.
+## About
+This is a .NET Windows Forms application that helps creating plain text from a specific file and vice versa.
+
+This is helpful when you don't have a way to send files but only text.
 
 <div align="center">
     <img width="562px" height="355px" src="https://raw.githubusercontent.com/brunocampiol/file-as-string/main/Resources/app.png" >
@@ -15,21 +21,33 @@ Any kind of help is welcome.
 
 * .NET Framework 4.8
 
-## How to use
+## Usage
 
-### Serialize
-1. Open the .exe file
+### Serialize a file
+1. Open the application
 1. On 'Serialize' tab, select the file to serialize
 1. The output is written to the textbox below
 
-Application will copy result automatically to your clipboard
+Hit: result will be copied automatically to your clipboard
 
-### Deserialize
+<div align="center">
+    <img width="480px" src="https://raw.githubusercontent.com/brunocampiol/file-as-string/main/Resources/serialize.gif" >
+</div>
+
+### Deserialize a string
 1. Open the .exe file
 1. On 'Deserialize' tab, paste the result from serialize step
 1. Application will write the original content in current directory
 
 The new file will have a 'restored-' suffix
+
+<div align="center">
+    <img width="480px" src="https://raw.githubusercontent.com/brunocampiol/file-as-string/main/Resources/deserialize.gif" >
+</div>
+
+## Contributing
+
+Any kind of help is welcome 🤝
 
 <div align="center">
     <div>
