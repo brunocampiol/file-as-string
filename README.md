@@ -23,7 +23,8 @@ This is helpful when you don't have a way to send files but only text.
 
 ## Usage
 
-### Serialize a file
+### Serialize a file (📁 ->  🖹)
+
 1. Open the application
 1. On 'Serialize' tab, select the file to serialize
 1. The output is written to the textbox below
@@ -34,8 +35,8 @@ Hit: result will be copied automatically to your clipboard
     <img width="480px" src="https://raw.githubusercontent.com/brunocampiol/file-as-string/main/Resources/serialize.gif" >
 </div>
 
-### Deserialize a string
-1. Open the .exe file
+### Deserialize text back (🖹 -> 📁)
+1. Open the application
 1. On 'Deserialize' tab, paste the result from serialize step
 1. Application will write the original content in current directory
 
