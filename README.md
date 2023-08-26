@@ -21,6 +21,10 @@ This is helpful when you don't have a way to send files but only text.
 
 * .NET Framework 4.8
 
+## Binaries
+
+Download latest release <a href="https://raw.githubusercontent.com/brunocampiol/file-as-string/main/Resources/FileAsStringUI.exe" download>FileAsStringUI.exe</a>
+
 ## Usage
 
 ### Serialize a file (📁 ->  🖹)
