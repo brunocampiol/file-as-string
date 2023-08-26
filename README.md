@@ -1,5 +1,5 @@
 <h1 align="center">
-📄<br>File As String UI
+📄<br>File Text Converter - GUI
 </h1>
 
 ## Table of Contents
