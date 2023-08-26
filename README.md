@@ -5,6 +5,7 @@
 ## Table of Contents
 - [About](#about)
 - [Requirements](#requirements)
+- [Binaries](#binaries)
 - [Usage](#usage)
 - [Contributing](#contributing)
 
