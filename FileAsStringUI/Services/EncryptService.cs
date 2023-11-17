@@ -7,10 +7,11 @@ namespace FileAsStringUI.Services
 {
     public static class EncryptService
     {
-        //While an app specific salt is not the best practice for
-        //password based encryption, it's probably safe enough as long as
-        //it is truly uncommon. Also too much work to alter this answer otherwise.
+        // While an app specific salt is not the best practice for
+        // password based encryption, it's probably safe enough as long as
+        // it is truly uncommon
         private static readonly byte[] _salt = Encoding.UTF8.GetBytes("4FFF7CF1-2CD1-4C4E-8229-E49BB42C6589");
+        private const string _nullOrEmptyStringError = "Cannot be null or empty";
 
         /// <summary>
         /// Encrypt the given string using AES.  The string can be decrypted using 
@@ -21,9 +22,9 @@ namespace FileAsStringUI.Services
         public static string EncryptStringAES(string plainText, string sharedSecret)
         {
             if (string.IsNullOrEmpty(plainText))
-                throw new ArgumentNullException("plainText");
+                throw new ArgumentException(_nullOrEmptyStringError, nameof(plainText));
             if (string.IsNullOrEmpty(sharedSecret))
-                throw new ArgumentNullException("sharedSecret");
+                throw new ArgumentException(_nullOrEmptyStringError, nameof(sharedSecret));
 
             string outStr = null;                       // Encrypted string to return
             RijndaelManaged aesAlg = null;              // RijndaelManaged object used to encrypt the data.
@@ -76,9 +77,9 @@ namespace FileAsStringUI.Services
         public static string DecryptStringAES(string cipherText, string sharedSecret)
         {
             if (string.IsNullOrEmpty(cipherText))
-                throw new ArgumentNullException("cipherText");
+                throw new ArgumentException(_nullOrEmptyStringError, nameof(cipherText));
             if (string.IsNullOrEmpty(sharedSecret))
-                throw new ArgumentNullException("sharedSecret");
+                throw new ArgumentException(_nullOrEmptyStringError, nameof(sharedSecret));
 
             // Declare the RijndaelManaged object
             // used to decrypt the data.
