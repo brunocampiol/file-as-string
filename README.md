@@ -24,7 +24,9 @@ This is helpful when you don't have a way to send files but only text.
 
 ## Binaries
 
-Download latest release <a href="https://raw.githubusercontent.com/brunocampiol/file-as-string/main/Resources/FileAsStringUI.exe" download>FileAsStringUI.exe</a>
+<a href="https://github.com/brunocampiol/file-as-string/releases">View available releases here</a>
+
+Download file `FileAsStringUI.exe`
 
 ## Usage
 
